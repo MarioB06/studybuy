@@ -69,6 +69,17 @@
         color: #000;
     }
 
+    .admin-badge {
+        background: #1aa8ba;
+        color: white;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-left: 8px;
+        vertical-align: middle;
+    }
+
     @media (max-width: 768px) {
         .header-container {
             flex-direction: column;
@@ -84,6 +95,12 @@
             <span>StudyBuy</span>
         </a>
         <nav class="nav-links">
+            @if(auth()->user()->isAdmin())
+                <a href="{{ route('admin.dashboard') }}">
+                    Admin
+                    <span class="admin-badge">Admin</span>
+                </a>
+            @endif
             <a href="{{ route('profile.edit') }}">Profil</a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
