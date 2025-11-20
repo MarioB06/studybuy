@@ -221,6 +221,48 @@
             color: #000;
         }
 
+        .cta-container {
+            background: linear-gradient(135deg, #1aa8ba 0%, #158a99 100%);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 50px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(26, 168, 186, 0.3);
+        }
+
+        .cta-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .cta-subtitle {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 25px;
+        }
+
+        .cta-button {
+            background: white;
+            color: #1aa8ba;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
         @media (max-width: 768px) {
             .categories {
                 grid-template-columns: repeat(2, 1fr);
@@ -273,6 +315,14 @@
 
     <main class="main-content">
         <h1 class="title">Kaufe und verkaufe deine Studienobjekte</h1>
+
+        <div class="cta-container">
+            <div class="cta-title">Verkaufe deine Studienobjekte</div>
+            <div class="cta-subtitle">Erstelle ein Inserat in wenigen Schritten und erreiche Studenten in deiner Umgebung</div>
+            <a href="{{ route('products.create') }}" class="cta-button">
+                ✨ Jetzt Produkt inserieren
+            </a>
+        </div>
 
         <div class="categories">
             <div class="category-card">
