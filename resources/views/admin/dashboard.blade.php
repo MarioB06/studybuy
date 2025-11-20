@@ -185,20 +185,20 @@
         <div class="admin-section">
             <h2 class="section-title">Schnellzugriff</h2>
             <div class="quick-actions">
-                <a href="#" class="action-button">
+                <a href="{{ route('admin.categories.index') }}" class="action-button">
                     <div class="action-icon">=e</div>
-                    <div class="action-label">Benutzer verwalten</div>
+                    <div class="action-label">Kategorien verwalten</div>
+                </a>
+                <a href="{{ route('admin.schools.index') }}" class="action-button">
+                    <div class="action-icon">=ï¿½</div>
+                    <div class="action-label">Schulen verwalten</div>
                 </a>
                 <a href="#" class="action-button">
-                    <div class="action-icon">=æ</div>
-                    <div class="action-label">Produkte verwalten</div>
-                </a>
-                <a href="#" class="action-button">
-                    <div class="action-icon">=Ê</div>
+                    <div class="action-icon">=ï¿½</div>
                     <div class="action-label">Statistiken</div>
                 </a>
                 <a href="#" class="action-button">
-                    <div class="action-icon">™</div>
+                    <div class="action-icon">ï¿½</div>
                     <div class="action-label">Einstellungen</div>
                 </a>
             </div>
@@ -207,7 +207,7 @@
         <div class="admin-section">
             <h2 class="section-title">Willkommen im Admin-Bereich</h2>
             <p style="color: #666; line-height: 1.6;">
-                Hier können Sie alle wichtigen Funktionen der StudyBuy-Plattform verwalten.
+                Hier kï¿½nnen Sie alle wichtigen Funktionen der StudyBuy-Plattform verwalten.
                 Nutzen Sie die Schnellzugriff-Buttons oben, um direkt zu den wichtigsten Bereichen zu gelangen.
             </p>
         </div>
