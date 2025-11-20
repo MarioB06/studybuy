@@ -1,29 +1,46 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 40px;
+        }
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
+        .profile-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 40px;
+        }
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
+        .profile-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
-                </div>
-            </div>
+        @media (max-width: 768px) {
+            .profile-container {
+                padding: 0 20px;
+            }
+        }
+    </style>
+
+    <div class="profile-container">
+        <h1 class="profile-title">Profil</h1>
+
+        <div class="profile-section">
+            @include('profile.partials.update-profile-information-form')
+        </div>
+
+        <div class="profile-section">
+            @include('profile.partials.update-password-form')
+        </div>
+
+        <div class="profile-section">
+            @include('profile.partials.delete-user-form')
         </div>
     </div>
 </x-app-layout>
