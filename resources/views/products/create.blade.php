@@ -127,6 +127,100 @@
             gap: 20px;
         }
 
+        .image-upload-container {
+            margin-bottom: 25px;
+        }
+
+        .image-previews {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .image-preview {
+            position: relative;
+            aspect-ratio: 1;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-preview .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(231, 76, 60, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .image-preview .remove-btn:hover {
+            background: rgba(192, 57, 43, 1);
+        }
+
+        .image-preview .main-badge {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            background: rgba(26, 168, 186, 0.9);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .add-image-btn {
+            aspect-ratio: 1;
+            border: 2px dashed #1aa8ba;
+            border-radius: 8px;
+            background: #f0f9fa;
+            color: #1aa8ba;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .add-image-btn:hover {
+            background: #e1f4f6;
+            border-color: #158a99;
+        }
+
+        .add-image-btn svg {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 8px;
+        }
+
+        #images {
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .product-create-container {
                 padding: 0 20px;
@@ -157,7 +251,7 @@
         <p class="page-subtitle">Erstellen Sie ein neues Inserat für Ihr Studienobjekt</p>
 
         <div class="form-card">
-            <form method="POST" action="{{ route('products.store') }}">
+            <form method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
                 @csrf
 
                 <div class="form-group">
@@ -230,6 +324,36 @@
                     @enderror
                 </div>
 
+                <div class="form-group">
+                    <label class="form-label">
+                        Produktfotos<span class="required">*</span>
+                    </label>
+                    <div class="form-help" style="margin-bottom: 15px;">
+                        Laden Sie mindestens 1 und maximal 5 Fotos hoch. Das erste Foto wird als Hauptbild verwendet.
+                    </div>
+                    <input
+                        type="file"
+                        id="images"
+                        name="images[]"
+                        multiple
+                        accept="image/jpeg,image/jpg,image/png,image/webp"
+                    >
+                    <div class="image-previews" id="imagePreviews">
+                        <label for="images" class="add-image-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            Fotos hinzufügen
+                        </label>
+                    </div>
+                    @error('images')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
+                    @error('images.*')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="price" class="form-label">
@@ -280,4 +404,82 @@
             </form>
         </div>
     </div>
+
+    <script>
+        const MAX_IMAGES = 5;
+        let selectedFiles = [];
+
+        const imageInput = document.getElementById('images');
+        const previewContainer = document.getElementById('imagePreviews');
+
+        imageInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+
+            // Check if adding these files would exceed the limit
+            if (selectedFiles.length + files.length > MAX_IMAGES) {
+                alert(`Sie können maximal ${MAX_IMAGES} Fotos hochladen.`);
+                return;
+            }
+
+            files.forEach(file => {
+                if (selectedFiles.length < MAX_IMAGES) {
+                    selectedFiles.push(file);
+                }
+            });
+
+            updatePreviews();
+            e.target.value = ''; // Reset input
+        });
+
+        function updatePreviews() {
+            // Clear existing previews except the add button
+            const addButton = previewContainer.querySelector('.add-image-btn');
+            previewContainer.innerHTML = '';
+
+            // Add previews for each selected file
+            selectedFiles.forEach((file, index) => {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const previewDiv = document.createElement('div');
+                    previewDiv.className = 'image-preview';
+
+                    previewDiv.innerHTML = `
+                        <img src="${e.target.result}" alt="Vorschau ${index + 1}">
+                        <button type="button" class="remove-btn" onclick="removeImage(${index})">&times;</button>
+                        ${index === 0 ? '<span class="main-badge">Hauptbild</span>' : ''}
+                    `;
+
+                    previewContainer.appendChild(previewDiv);
+                };
+
+                reader.readAsDataURL(file);
+            });
+
+            // Show add button only if we haven't reached the limit
+            if (selectedFiles.length < MAX_IMAGES) {
+                previewContainer.appendChild(addButton);
+            }
+
+            // Update the file input with current files
+            updateFileInput();
+        }
+
+        function removeImage(index) {
+            selectedFiles.splice(index, 1);
+            updatePreviews();
+        }
+
+        function updateFileInput() {
+            // Create a new DataTransfer object to update the input files
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(file => {
+                dataTransfer.items.add(file);
+            });
+            imageInput.files = dataTransfer.files;
+        }
+
+        // Make removeImage globally accessible
+        window.removeImage = removeImage;
+    </script>
 </x-app-layout>

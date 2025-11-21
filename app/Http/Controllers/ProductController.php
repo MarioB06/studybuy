@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Models\School;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -42,12 +44,39 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'expires_at' => 'nullable|date',
+            'images' => 'required|array|min:1|max:5',
+            'images.*' => 'required|image|mimes:jpeg,jpg,png,webp|max:5120', // Max 5MB per image
         ]);
 
         $validated['user_id'] = auth()->id();
         $validated['is_active'] = true;
 
-        Product::create($validated);
+        // Create the product (without images field)
+        $productData = collect($validated)->except('images')->toArray();
+        $product = Product::create($productData);
+
+        // Handle image uploads
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                // Generate unique filename
+                $filename = time() . '_' . $index . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+
+                // Store in public/storage/products/{product_id}/
+                $path = $image->storeAs(
+                    'products/' . $product->id,
+                    $filename,
+                    'public'
+                );
+
+                // Create product image record
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'file_path' => $path,
+                    'is_main' => $index === 0, // First image is the main image
+                    'sort_order' => $index,
+                ]);
+            }
+        }
 
         return redirect()->route('dashboard')->with('success', 'Produkt erfolgreich erstellt!');
     }
