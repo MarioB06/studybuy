@@ -253,66 +253,68 @@
     <main class="main-content">
         <h1 class="title">Kaufe und verkaufe deine Studienobjekte</h1>
 
+        @if($categories->count() > 0)
         <div class="categories">
+            @foreach($categories as $category)
+            @php
+                $iconMap = [
+                    'fas fa-book' => '📚',
+                    'fas fa-laptop' => '💻',
+                    'fas fa-calculator' => '🖩',
+                    'fas fa-backpack' => '🎒',
+                    'fas fa-couch' => '🛋️',
+                    'fas fa-shirt' => '👕',
+                    'fas fa-dumbbell' => '🏋️',
+                    'fas fa-box' => '📦',
+                ];
+                $emoji = $iconMap[$category->icon] ?? '📦';
+            @endphp
             <div class="category-card">
-                <div class="category-icon">💻</div>
-                <div class="category-name">Elektronik</div>
+                <div class="category-icon">{{ $emoji }}</div>
+                <div class="category-name">{{ $category->name }}</div>
             </div>
-            <div class="category-card">
-                <div class="category-icon">📚</div>
-                <div class="category-name">Bücher</div>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">🖩</div>
-                <div class="category-name">Rechner</div>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">🎒</div>
-                <div class="category-name">Zubehör</div>
-            </div>
+            @endforeach
         </div>
+        @endif
 
+        @if($products->count() > 0)
         <div class="products-grid">
+            @foreach($products as $product)
             <div class="product-card">
-                <div class="product-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 80px;">
-                    📱
-                </div>
+                @if($product->mainImage)
+                    <img src="{{ asset('storage/' . $product->mainImage->file_path) }}" alt="{{ $product->title }}" class="product-image">
+                @else
+                    @php
+                        $iconMap = [
+                            'fas fa-book' => '📚',
+                            'fas fa-laptop' => '💻',
+                            'fas fa-calculator' => '🖩',
+                            'fas fa-backpack' => '🎒',
+                            'fas fa-couch' => '🛋️',
+                            'fas fa-shirt' => '👕',
+                            'fas fa-dumbbell' => '🏋️',
+                            'fas fa-box' => '📦',
+                        ];
+                        $emoji = $iconMap[$product->category->icon ?? ''] ?? '📦';
+                    @endphp
+                    <div class="product-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 80px;">
+                        {{ $emoji }}
+                    </div>
+                @endif
                 <div class="product-info">
-                    <div class="product-title">iPad Pro (11 Zoll, 20</div>
-                    <div class="product-price">450 CHF</div>
+                    <div class="product-title">{{ Str::limit($product->title, 40) }}</div>
+                    <div class="product-price">{{ number_format($product->price, 2, '.', '\'') }} CHF</div>
                 </div>
             </div>
-
-            <div class="product-card">
-                <div class="product-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center; font-size: 80px;">
-                    📚
-                </div>
-                <div class="product-info">
-                    <div class="product-title">Bücher</div>
-                    <div class="product-price">60 CHF</div>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="product-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center; font-size: 80px;">
-                    🖩
-                </div>
-                <div class="product-info">
-                    <div class="product-title">Texas Instruments Ti-84 Plus</div>
-                    <div class="product-price">75 CHF</div>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="product-image" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); display: flex; align-items: center; justify-content: center; font-size: 80px;">
-                    🎒
-                </div>
-                <div class="product-info">
-                    <div class="product-title">Rucksack von Herschel</div>
-                    <div class="product-price">40 CHF</div>
-                </div>
-            </div>
+            @endforeach
         </div>
+        @else
+        <div style="text-align: center; padding: 60px 20px; color: #666;">
+            <div style="font-size: 48px; margin-bottom: 20px;">📦</div>
+            <h3 style="font-size: 20px; margin-bottom: 10px;">Noch keine Produkte verfügbar</h3>
+            <p>Schau später wieder vorbei oder melde dich an, um selbst ein Produkt zu inserieren.</p>
+        </div>
+        @endif
     </main>
 </body>
 </html>

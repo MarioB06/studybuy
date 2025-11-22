@@ -336,7 +336,8 @@
                         id="images"
                         name="images[]"
                         multiple
-                        accept="image/jpeg,image/jpg,image/png,image/webp"
+                        accept="image/jpeg,image/jpg,image/png,image/webp,image/heic"
+                        required
                     >
                     <div class="image-previews" id="imagePreviews">
                         <label for="images" class="add-image-btn">
@@ -349,9 +350,13 @@
                     @error('images')
                         <div class="error-message">{{ $message }}</div>
                     @enderror
-                    @error('images.*')
-                        <div class="error-message">{{ $message }}</div>
-                    @enderror
+                    @if($errors->has('images.0') || $errors->has('images.1') || $errors->has('images.2') || $errors->has('images.3') || $errors->has('images.4'))
+                        @foreach($errors->get('images.*') as $messages)
+                            @foreach($messages as $message)
+                                <div class="error-message">{{ $message }}</div>
+                            @endforeach
+                        @endforeach
+                    @endif
                 </div>
 
                 <div class="form-row">
@@ -407,37 +412,33 @@
 
     <script>
         const MAX_IMAGES = 5;
-        let selectedFiles = [];
 
         const imageInput = document.getElementById('images');
         const previewContainer = document.getElementById('imagePreviews');
+        const addButton = previewContainer.querySelector('.add-image-btn');
 
         imageInput.addEventListener('change', function(e) {
             const files = Array.from(e.target.files);
 
-            // Check if adding these files would exceed the limit
-            if (selectedFiles.length + files.length > MAX_IMAGES) {
+            // Check if files exceed the limit
+            if (files.length > MAX_IMAGES) {
                 alert(`Sie können maximal ${MAX_IMAGES} Fotos hochladen.`);
+                imageInput.value = '';
                 return;
             }
 
-            files.forEach(file => {
-                if (selectedFiles.length < MAX_IMAGES) {
-                    selectedFiles.push(file);
-                }
-            });
-
-            updatePreviews();
-            e.target.value = ''; // Reset input
+            if (files.length > 0) {
+                updatePreviews(files);
+            }
         });
 
-        function updatePreviews() {
-            // Clear existing previews except the add button
-            const addButton = previewContainer.querySelector('.add-image-btn');
-            previewContainer.innerHTML = '';
+        function updatePreviews(files) {
+            // Remove all previews but keep the add button
+            const previews = previewContainer.querySelectorAll('.image-preview');
+            previews.forEach(preview => preview.remove());
 
             // Add previews for each selected file
-            selectedFiles.forEach((file, index) => {
+            files.forEach((file, index) => {
                 const reader = new FileReader();
 
                 reader.onload = function(e) {
@@ -446,40 +447,22 @@
 
                     previewDiv.innerHTML = `
                         <img src="${e.target.result}" alt="Vorschau ${index + 1}">
-                        <button type="button" class="remove-btn" onclick="removeImage(${index})">&times;</button>
                         ${index === 0 ? '<span class="main-badge">Hauptbild</span>' : ''}
                     `;
 
-                    previewContainer.appendChild(previewDiv);
+                    // Insert before the add button
+                    previewContainer.insertBefore(previewDiv, addButton);
                 };
 
                 reader.readAsDataURL(file);
             });
 
-            // Show add button only if we haven't reached the limit
-            if (selectedFiles.length < MAX_IMAGES) {
-                previewContainer.appendChild(addButton);
+            // Show or hide add button based on count
+            if (files.length >= MAX_IMAGES) {
+                addButton.style.display = 'none';
+            } else {
+                addButton.style.display = 'flex';
             }
-
-            // Update the file input with current files
-            updateFileInput();
         }
-
-        function removeImage(index) {
-            selectedFiles.splice(index, 1);
-            updatePreviews();
-        }
-
-        function updateFileInput() {
-            // Create a new DataTransfer object to update the input files
-            const dataTransfer = new DataTransfer();
-            selectedFiles.forEach(file => {
-                dataTransfer.items.add(file);
-            });
-            imageInput.files = dataTransfer.files;
-        }
-
-        // Make removeImage globally accessible
-        window.removeImage = removeImage;
     </script>
 </x-app-layout>

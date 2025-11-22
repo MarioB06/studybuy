@@ -45,7 +45,14 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'expires_at' => 'nullable|date',
             'images' => 'required|array|min:1|max:5',
-            'images.*' => 'required|image|mimes:jpeg,jpg,png,webp|max:5120', // Max 5MB per image
+            'images.*' => 'image|mimes:jpeg,jpg,png,webp|max:5120', // Max 5MB per image
+        ], [
+            'images.required' => 'Bitte laden Sie mindestens ein Foto hoch.',
+            'images.min' => 'Bitte laden Sie mindestens ein Foto hoch.',
+            'images.max' => 'Sie können maximal 5 Fotos hochladen.',
+            'images.*.image' => 'Die Datei muss ein Bild sein.',
+            'images.*.mimes' => 'Erlaubte Bildformate: JPEG, JPG, PNG, WEBP.',
+            'images.*.max' => 'Jedes Bild darf maximal 5MB groß sein.',
         ]);
 
         $validated['user_id'] = auth()->id();

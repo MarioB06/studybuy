@@ -7,11 +7,26 @@ Route::get('/', function () {
     if (auth()->check()) {
         return redirect()->route('dashboard');
     }
-    return view('welcome');
+
+    $categories = App\Models\ProductCategory::all();
+    $products = App\Models\Product::with(['mainImage', 'category', 'school'])
+        ->where('is_active', true)
+        ->latest()
+        ->take(8)
+        ->get();
+
+    return view('welcome', compact('categories', 'products'));
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $categories = App\Models\ProductCategory::all();
+    $products = App\Models\Product::with(['mainImage', 'category', 'school'])
+        ->where('is_active', true)
+        ->latest()
+        ->take(8)
+        ->get();
+
+    return view('dashboard', compact('categories', 'products'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
