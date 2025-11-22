@@ -8,7 +8,7 @@ Route::get('/', function () {
         return redirect()->route('dashboard');
     }
 
-    $categories = App\Models\ProductCategory::all();
+    $categories = App\Models\ProductCategory::inRandomOrder()->take(4)->get();
     $products = App\Models\Product::with(['mainImage', 'category', 'school'])
         ->where('is_active', true)
         ->latest()
@@ -19,7 +19,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $categories = App\Models\ProductCategory::all();
+    $categories = App\Models\ProductCategory::inRandomOrder()->take(4)->get();
     $products = App\Models\Product::with(['mainImage', 'category', 'school'])
         ->where('is_active', true)
         ->latest()

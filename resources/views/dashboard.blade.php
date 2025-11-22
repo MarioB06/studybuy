@@ -134,6 +134,32 @@
             text-align: center;
         }
 
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .view-all-link {
+            font-size: 15px;
+            color: #1aa8ba;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .view-all-link:hover {
+            color: #158a99;
+            text-decoration: underline;
+        }
+
         .categories {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -325,6 +351,10 @@
         </div>
 
         @if($categories->count() > 0)
+        <div class="section-header">
+            <h2 class="section-title">Top Kategorien</h2>
+            <a href="{{ route('products.index') }}" class="view-all-link">Alle Kategorien anzeigen →</a>
+        </div>
         <div class="categories">
             @foreach($categories as $category)
             @php
