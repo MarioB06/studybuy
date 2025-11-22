@@ -156,6 +156,8 @@
             text-align: center;
             cursor: pointer;
             transition: transform 0.2s;
+            text-decoration: none;
+            color: inherit;
         }
 
         .category-card:hover {
@@ -299,10 +301,10 @@
                 ];
                 $emoji = $iconMap[$category->icon] ?? '📦';
             @endphp
-            <div class="category-card">
+            <a href="{{ route('products.index', ['categories' => [$category->id]]) }}" class="category-card">
                 <div class="category-icon">{{ $emoji }}</div>
                 <div class="category-name">{{ $category->name }}</div>
-            </div>
+            </a>
             @endforeach
         </div>
         @endif
