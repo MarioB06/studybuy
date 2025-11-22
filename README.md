@@ -1,59 +1,162 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎒 StudyBuy
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Laravel](https://img.shields.io/badge/Laravel-11.x-red.svg)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.2+-blue.svg)](https://php.net)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## About Laravel
+> **Marktplatz für studienrelevante Second-Hand-Objekte**  
+> Von Studis für Studis – einfach, sicher und nachhaltig
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📖 Über StudyBuy
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+StudyBuy ist ein spezialisierter Re-Commerce-Marktplatz für Studierende an Universitäten und Fachhochschulen. Die Plattform ermöglicht den einfachen, sicheren und lokalen Handel von studienrelevanten Objekten wie:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- 💻 **Elektronik** (iPads, Laptops, Tablets)
+- 📚 **Fachbücher** und Lehrmaterial
+- 🖩 **Taschenrechner** (TI-84, Casio, etc.)
+- 🎒 **Zubehör** (Rucksäcke, Schreibwaren, etc.)
 
-## Learning Laravel
+### 🎯 Vision & Mission
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+**Vision:** Der führende Marktplatz für studentische Second-Hand-Objekte im DACH-Raum zu werden.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Mission:** 
+- 🌱 **Nachhaltigkeit**: Wiederverwendung statt Neukauf – Reduktion von Ressourcenverbrauch und CO₂-Fussabdruck
+- 💰 **Erschwinglichkeit**: Zugang zu günstigen Studienmaterialien für alle
+- 🤝 **Gemeinschaft**: Eine vertrauenswürdige Community durch Verified-Student-Registrierung
+- ❤️ **Soziale Verantwortung**: Unterstützung bedürftiger Studierender durch einen Studentenfonds
 
-## Laravel Sponsors
+## ✨ Features
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 🔐 Verified Student System
+- Registrierung mit universitärer E-Mail-Adresse
+- Erhöhte Sicherheit und Vertrauen innerhalb der Community
+- Zugang nur für verifizierte Studierende
 
-### Premium Partners
+### 🛍️ Marktplatz-Funktionen
+- **Produktinserate** mit bis zu 5 Bildern
+- **Kategorisierung** nach Produkttypen
+- **Schulen/Universitäten** Filter für lokale Angebote
+- **Suchfunktion** für schnelles Finden von Produkten
+- **Produktdetailseiten** mit vollständigen Informationen
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 👨‍💼 Admin-Bereich
+- Dashboard mit Übersicht und Statistiken
+- Verwaltung von Kategorien
+- Verwaltung von Schulen/Universitäten
+- Benutzerverwaltung mit Admin-Rollen
 
-## Contributing
+### 💳 Zahlungsabwicklung (geplant)
+- Integration mit Stripe für sichere Zahlungen
+- Transaktionsprotokollierung
+- 5% Plattformgebühr (Take-Rate)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🛠️ Technologie-Stack
 
-## Code of Conduct
+### Backend
+- **Framework**: Laravel 11.x
+- **PHP**: 8.2+
+- **Datenbank**: MySQL
+- **Authentication**: Laravel Breeze
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Frontend
+- **Views**: Blade Templates
+- **Styling**: Inline CSS (MVP-Phase)
+- **JavaScript**: Alpine.js
+- **Icons**: FontAwesome
 
-## Security Vulnerabilities
+### Deployment
+- **Server**: Apache/Nginx
+- **Asset Management**: Laravel Mix/Vite
+- **Storage**: Local File Storage (S3 ready)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📁 Projektstruktur
 
-## License
+```
+studybuy/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Admin/          # Admin-Controller
+│   │   │   │   ├── CategoryController.php
+│   │   │   │   ├── DashboardController.php
+│   │   │   │   └── SchoolController.php
+│   │   │   ├── Auth/           # Authentifizierung
+│   │   │   ├── ProductController.php
+│   │   │   └── ProfileController.php
+│   │   ├── Middleware/
+│   │   │   └── IsAdmin.php     # Admin-Middleware
+│   │   └── Requests/
+│   └── Models/
+│       ├── Product.php
+│       ├── ProductCategory.php
+│       ├── ProductImage.php
+│       ├── School.php
+│       └── User.php
+├── database/
+│   ├── migrations/              # Datenbank-Migrationen
+│   └── seeders/
+│       └── ProductCategorySeeder.php
+├── resources/
+│   └── views/
+│       ├── admin/              # Admin-Views
+│       ├── auth/               # Login/Register
+│       ├── products/           # Produkt-Views
+│       ├── profile/            # Profil-Views
+│       └── dashboard.blade.php
+├── routes/
+│   ├── web.php                 # Web-Routen
+│   └── auth.php                # Auth-Routen
+└── public/
+    └── storage/                # Öffentlicher Storage Link
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🗄️ Datenbank-Schema
+
+### Haupttabellen
+
+- **users** - Benutzer mit Admin-Flag (`bit`)
+- **schools** - Universitäten und Hochschulen
+- **product_categories** - Produktkategorien mit Icons
+- **products** - Produktinserate
+- **product_images** - Produktbilder (1:n Relation)
+- **stripe_payment_logs** - Zahlungsprotokollierung (vorbereitet)
+
+## 🎨 Design-Prinzipien
+
+### Farbschema
+- **Primary**: `#1aa8ba` (Türkis) - Call-to-Actions, Links
+- **Background**: `#f8f9fa` (Hellgrau)
+- **Cards**: `#ffffff` (Weiß)
+- **Text**: `#000000`, `#333333`, `#666666`
+
+### UI/UX Philosophie
+- **Minimalistisch**: Fokus auf Inhalte, nicht auf Design-Elemente
+- **Studentenfreundlich**: Einfache, intuitive Navigation
+- **Mobile First**: Responsive Design für alle Geräte
+- **Schnell**: Optimierte Ladezeiten, keine überflüssigen Animationen
+
+## 🔑 Berechtigungen & Rollen
+
+### Benutzer-Typen
+
+1. **Gast** - Kann Produkte durchsuchen
+2. **Registrierter User** - Kann kaufen und verkaufen
+3. **Admin** (`bit = true`) - Voller Zugriff auf Admin-Bereich
+
+### Admin-Funktionen
+- Kategorie-Management
+- Schulen-Management
+- Benutzer-Übersicht
+- Statistiken und Analytics
+
+## 📧 Kontakt
+
+- **Email**: info@studybuy.ch
+- **Website**: [studybuy.ch](https://studybuy.ch)
+- **GitHub**: [@studybuy](https://github.com/mariob06/studybuy)
+
+---
+
+**Hinweis**: Dies ist ein MVP-Projekt in aktiver Entwicklung. Features und Design können sich ändern.
+
