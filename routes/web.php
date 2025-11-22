@@ -48,6 +48,11 @@ Route::middleware('auth')->group(function () {
 // Public Product Show Route (must be after /products/create to avoid route collision)
 Route::get('/products/{product}', [App\Http\Controllers\ProductController::class, 'show'])->name('products.show');
 
+// Product Forum Messages (auth required to post)
+Route::post('/products/{product}/forum', [App\Http\Controllers\ProductController::class, 'storeForumMessage'])
+    ->middleware('auth')
+    ->name('products.forum.store');
+
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');

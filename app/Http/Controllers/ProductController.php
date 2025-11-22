@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\School;
 use App\Models\ProductCategory;
+use App\Models\ProductForumMessage;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -139,9 +140,29 @@ class ProductController extends Controller
      */
     public function show(Product $product): View
     {
-        $product->load(['mainImage', 'images', 'category', 'school', 'user']);
+        $product->load(['mainImage', 'images', 'category', 'school', 'user', 'forumMessages']);
 
         return view('products.show', compact('product'));
+    }
+
+    public function storeForumMessage(Request $request, Product $product): RedirectResponse
+    {
+        $validated = $request->validate([
+            'message' => 'required|string|max:2000',
+            'parent_id' => 'nullable|exists:product_forum_messages,id',
+        ]);
+
+        $isOfficial = auth()->id() === $product->user_id;
+
+        ProductForumMessage::create([
+            'product_id' => $product->id,
+            'user_id' => auth()->id(),
+            'parent_id' => $validated['parent_id'] ?? null,
+            'message' => $validated['message'],
+            'is_official' => $isOfficial,
+        ]);
+
+        return redirect()->route('products.show', $product)->with('success', 'Nachricht wurde gepostet!');
     }
 
     /**

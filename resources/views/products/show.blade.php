@@ -294,6 +294,167 @@
             transform: translateY(-2px);
         }
 
+        /* Forum Styles */
+        .forum-section {
+            max-width: 1200px;
+            margin: 40px auto 0;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .forum-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #000;
+        }
+
+        .forum-form {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .forum-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+
+        .forum-textarea:focus {
+            outline: none;
+            border-color: #1aa8ba;
+        }
+
+        .forum-submit {
+            background: #1aa8ba;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .forum-submit:hover {
+            background: #158a99;
+        }
+
+        .forum-login {
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            color: #666;
+        }
+
+        .forum-login a {
+            color: #1aa8ba;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .forum-message {
+            padding: 25px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .forum-message:last-child {
+            border-bottom: none;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .message-author {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .message-badge {
+            padding: 4px 12px;
+            background: #1aa8ba;
+            color: white;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .message-time {
+            color: #999;
+            font-size: 14px;
+            margin-left: auto;
+        }
+
+        .message-content {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .reply-button {
+            color: #1aa8ba;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 0;
+        }
+
+        .reply-button:hover {
+            text-decoration: underline;
+        }
+
+        .reply-form {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .reply-form.active {
+            display: block;
+        }
+
+        .replies {
+            margin-top: 20px;
+            margin-left: 40px;
+            padding-left: 20px;
+            border-left: 3px solid #e0e0e0;
+        }
+
+        .reply {
+            padding: 20px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .reply:last-child {
+            border-bottom: none;
+        }
+
         @media (max-width: 768px) {
             .product-container {
                 grid-template-columns: 1fr;
@@ -314,6 +475,14 @@
             .header-container {
                 flex-direction: column;
                 gap: 15px;
+            }
+
+            .forum-section {
+                padding: 20px;
+            }
+
+            .replies {
+                margin-left: 20px;
             }
         }
     </style>
@@ -465,6 +634,88 @@
                 </div>
             </div>
         </div>
+
+        <!-- Forum Section -->
+        <div class="forum-section">
+            <h2 class="forum-title">Fragen & Diskussion ({{ $product->forumMessages->count() }})</h2>
+
+            @auth
+                <form method="POST" action="{{ route('products.forum.store', $product) }}" class="forum-form">
+                    @csrf
+                    <textarea
+                        name="message"
+                        class="forum-textarea"
+                        placeholder="Stelle eine Frage oder hinterlasse einen Kommentar..."
+                        required
+                        maxlength="2000"></textarea>
+                    <button type="submit" class="forum-submit">Nachricht senden</button>
+                </form>
+            @else
+                <div class="forum-login">
+                    <p>Du musst <a href="{{ route('login') }}">angemeldet</a> sein, um eine Nachricht zu schreiben.</p>
+                </div>
+            @endauth
+
+            @if($product->forumMessages->count() > 0)
+                @foreach($product->forumMessages as $message)
+                <div class="forum-message">
+                    <div class="message-header">
+                        <span class="message-author">{{ $message->user->name }}</span>
+                        @if($message->is_official)
+                            <span class="message-badge">Verkäufer</span>
+                        @endif
+                        <span class="message-time">{{ $message->created_at->diffForHumans() }}</span>
+                    </div>
+                    <div class="message-content">{{ $message->message }}</div>
+                    <div class="message-actions">
+                        @auth
+                            <button class="reply-button" onclick="toggleReply({{ $message->id }})">
+                                Antworten
+                            </button>
+                        @endauth
+                    </div>
+
+                    @auth
+                    <div class="reply-form" id="reply-form-{{ $message->id }}">
+                        <form method="POST" action="{{ route('products.forum.store', $product) }}">
+                            @csrf
+                            <input type="hidden" name="parent_id" value="{{ $message->id }}">
+                            <textarea
+                                name="message"
+                                class="forum-textarea"
+                                placeholder="Deine Antwort..."
+                                required
+                                maxlength="2000"
+                                style="min-height: 80px;"></textarea>
+                            <button type="submit" class="forum-submit">Antwort senden</button>
+                        </form>
+                    </div>
+                    @endauth
+
+                    @if($message->replies->count() > 0)
+                    <div class="replies">
+                        @foreach($message->replies as $reply)
+                        <div class="reply">
+                            <div class="message-header">
+                                <span class="message-author">{{ $reply->user->name }}</span>
+                                @if($reply->is_official)
+                                    <span class="message-badge">Verkäufer</span>
+                                @endif
+                                <span class="message-time">{{ $reply->created_at->diffForHumans() }}</span>
+                            </div>
+                            <div class="message-content">{{ $reply->message }}</div>
+                        </div>
+                        @endforeach
+                    </div>
+                    @endif
+                </div>
+                @endforeach
+            @else
+                <div style="text-align: center; padding: 40px; color: #666;">
+                    <p>Noch keine Nachrichten. Sei der Erste und stelle eine Frage!</p>
+                </div>
+            @endif
+        </div>
     </main>
 
     <script>
@@ -478,6 +729,11 @@
             // Update active thumbnail
             document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
             thumbnail.classList.add('active');
+        }
+
+        function toggleReply(messageId) {
+            const replyForm = document.getElementById('reply-form-' + messageId);
+            replyForm.classList.toggle('active');
         }
     </script>
 </body>

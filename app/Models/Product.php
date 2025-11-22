@@ -52,4 +52,12 @@ class Product extends Model
     {
         return $this->hasOne(ProductImage::class)->where('is_main', true);
     }
+
+    public function forumMessages(): HasMany
+    {
+        return $this->hasMany(ProductForumMessage::class)
+            ->whereNull('parent_id')
+            ->with(['user', 'replies'])
+            ->latest();
+    }
 }
