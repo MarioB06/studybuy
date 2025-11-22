@@ -307,10 +307,10 @@
     </header>
 
     <div class="search-container">
-        <div class="search-box">
-            <input type="text" class="search-input" placeholder="Suche nach „Laptop", „Buch, ...">
-            <button class="search-button">🔍</button>
-        </div>
+        <form method="GET" action="{{ route('products.index') }}" class="search-box">
+            <input type="text" name="search" class="search-input" placeholder="Suche nach „Laptop", „Buch, ...">
+            <button type="submit" class="search-button">🔍</button>
+        </form>
     </div>
 
     <main class="main-content">

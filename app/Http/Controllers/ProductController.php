@@ -25,6 +25,15 @@ class ProductController extends Controller
         $query = Product::with(['mainImage', 'category', 'school'])
             ->where('is_active', true);
 
+        // Search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('title', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('description', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
         // Filter by categories
         if ($request->has('categories') && !empty($request->categories)) {
             $query->whereIn('product_category_id', $request->categories);

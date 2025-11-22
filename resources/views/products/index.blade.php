@@ -407,10 +407,10 @@
     </header>
 
     <div class="search-container">
-        <div class="search-box">
-            <input type="text" class="search-input" placeholder="Suche nach „Laptop", „Buch, ...">
-            <button class="search-button">🔍</button>
-        </div>
+        <form method="GET" action="{{ route('products.index') }}" class="search-box">
+            <input type="text" name="search" class="search-input" placeholder="Suche nach „Laptop", „Buch, ..." value="{{ request('search') }}">
+            <button type="submit" class="search-button">🔍</button>
+        </form>
     </div>
 
     <main class="main-content">
@@ -420,6 +420,10 @@
             <!-- Sidebar Filters -->
             <aside class="sidebar">
                 <form method="GET" action="{{ route('products.index') }}" id="filterForm">
+                    @if(request('search'))
+                        <input type="hidden" name="search" value="{{ request('search') }}">
+                    @endif
+
                     <!-- Sort Filter -->
                     <div class="filter-section">
                         <h3 class="filter-title">Sortieren</h3>
@@ -491,11 +495,18 @@
             <section class="products-section">
                 <!-- Active Filters -->
                 @php
-                    $hasActiveFilters = request()->has('categories') || request()->has('schools') || (request('sort') && request('sort') !== 'latest');
+                    $hasActiveFilters = request()->has('search') || request()->has('categories') || request()->has('schools') || (request('sort') && request('sort') !== 'latest');
                 @endphp
 
                 @if($hasActiveFilters)
                 <div class="active-filters">
+                    @if(request()->has('search') && !empty(request('search')))
+                    <span class="filter-tag">
+                        Suche: "{{ request('search') }}"
+                        <button type="button" onclick="removeSearchFilter()">×</button>
+                    </span>
+                    @endif
+
                     @if(request()->has('categories'))
                         @foreach(request('categories') as $catId)
                             @php $cat = $categories->find($catId); @endphp
@@ -586,6 +597,12 @@
             const inputs = form.querySelectorAll(`input[name="${name}"][value="${value}"]`);
             inputs.forEach(input => input.checked = false);
             form.submit();
+        }
+
+        function removeSearchFilter() {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('search');
+            window.location.href = url.toString();
         }
     </script>
 </body>
