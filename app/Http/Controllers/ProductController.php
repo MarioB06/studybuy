@@ -16,9 +16,46 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request): View
     {
-        //
+        $categories = ProductCategory::all();
+        $schools = School::all();
+
+        // Build query
+        $query = Product::with(['mainImage', 'category', 'school'])
+            ->where('is_active', true);
+
+        // Filter by categories
+        if ($request->has('categories') && !empty($request->categories)) {
+            $query->whereIn('product_category_id', $request->categories);
+        }
+
+        // Filter by schools
+        if ($request->has('schools') && !empty($request->schools)) {
+            $query->whereIn('school_id', $request->schools);
+        }
+
+        // Sorting
+        $sortBy = $request->get('sort', 'latest');
+        switch ($sortBy) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'oldest':
+                $query->oldest();
+                break;
+            case 'latest':
+            default:
+                $query->latest();
+                break;
+        }
+
+        $products = $query->get();
+
+        return view('products.index', compact('categories', 'schools', 'products'));
     }
 
     /**
