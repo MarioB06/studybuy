@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyBuy - Dashboard</title>
+    <title>Alle Produkte - StudyBuy</title>
     <style>
         * {
             margin: 0;
@@ -118,7 +118,7 @@
         }
 
         .search-button:hover {
-            background: #1aa8ba;
+            background: #158a99;
         }
 
         .main-content {
@@ -148,6 +148,7 @@
             text-align: center;
             cursor: pointer;
             transition: transform 0.2s;
+            text-decoration: none;
         }
 
         .category-card:hover {
@@ -177,6 +178,24 @@
             color: #333;
         }
 
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .product-count {
+            font-size: 16px;
+            color: #666;
+        }
+
         .products-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -190,6 +209,9 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             transition: transform 0.2s, box-shadow 0.2s;
             cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
 
         .product-card:hover {
@@ -221,48 +243,6 @@
             color: #000;
         }
 
-        .cta-container {
-            background: linear-gradient(135deg, #1aa8ba 0%, #158a99 100%);
-            border-radius: 16px;
-            padding: 40px;
-            margin-bottom: 50px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(26, 168, 186, 0.3);
-        }
-
-        .cta-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 12px;
-        }
-
-        .cta-subtitle {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 25px;
-        }
-
-        .cta-button {
-            background: white;
-            color: #1aa8ba;
-            border: none;
-            padding: 16px 40px;
-            border-radius: 10px;
-            font-size: 17px;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        }
-
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-        }
-
         @media (max-width: 768px) {
             .categories {
                 grid-template-columns: repeat(2, 1fr);
@@ -292,16 +272,23 @@
 <body>
     <header class="header">
         <div class="header-container">
-            <a href="{{ route('dashboard') }}" class="logo">
+            <a href="{{ auth()->check() ? route('dashboard') : '/' }}" class="logo">
                 <div class="logo-icon">🎒</div>
                 <span>StudyBuy</span>
             </a>
             <nav class="nav-links">
-                <a href="{{ route('profile.edit') }}">Profil</a>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="logout-button">Abmelden</button>
-                </form>
+                @auth
+                    <a href="{{ route('products.index') }}">Alle Produkte</a>
+                    <a href="{{ route('profile.edit') }}">Profil</a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="logout-button">Abmelden</button>
+                    </form>
+                @else
+                    <a href="{{ route('products.index') }}">Alle Produkte</a>
+                    <a href="{{ route('login') }}">Anmelden</a>
+                    <a href="{{ route('register') }}">Registrieren</a>
+                @endauth
             </nav>
         </div>
     </header>
@@ -314,15 +301,7 @@
     </div>
 
     <main class="main-content">
-        <h1 class="title">Kaufe und verkaufe deine Studienobjekte</h1>
-
-        <div class="cta-container">
-            <div class="cta-title">Verkaufe deine Studienobjekte</div>
-            <div class="cta-subtitle">Erstelle ein Inserat in wenigen Schritten und erreiche Studenten in deiner Umgebung</div>
-            <a href="{{ route('products.create') }}" class="cta-button">
-                ✨ Jetzt Produkt inserieren
-            </a>
-        </div>
+        <h1 class="title">Alle Produkte</h1>
 
         @if($categories->count() > 0)
         <div class="categories">
@@ -347,6 +326,11 @@
             @endforeach
         </div>
         @endif
+
+        <div class="section-header">
+            <h2 class="section-title">Verfügbare Produkte</h2>
+            <span class="product-count">{{ $products->count() }} {{ $products->count() === 1 ? 'Produkt' : 'Produkte' }}</span>
+        </div>
 
         @if($products->count() > 0)
         <div class="products-grid">
@@ -383,10 +367,12 @@
         <div style="text-align: center; padding: 60px 20px; color: #666;">
             <div style="font-size: 48px; margin-bottom: 20px;">📦</div>
             <h3 style="font-size: 20px; margin-bottom: 10px;">Noch keine Produkte verfügbar</h3>
-            <p style="margin-bottom: 20px;">Sei der Erste und erstelle jetzt ein Inserat!</p>
+            <p style="margin-bottom: 20px;">Schau später wieder vorbei oder melde dich an, um selbst ein Produkt zu inserieren.</p>
+            @auth
             <a href="{{ route('products.create') }}" style="display: inline-block; background: #1aa8ba; color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: 600;">
                 Produkt inserieren
             </a>
+            @endauth
         </div>
         @endif
     </main>

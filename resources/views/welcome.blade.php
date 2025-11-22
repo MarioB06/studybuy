@@ -280,7 +280,7 @@
         @if($products->count() > 0)
         <div class="products-grid">
             @foreach($products as $product)
-            <div class="product-card">
+            <a href="{{ route('products.show', $product) }}" class="product-card">
                 @if($product->mainImage)
                     <img src="{{ asset('storage/' . $product->mainImage->file_path) }}" alt="{{ $product->title }}" class="product-image">
                 @else
@@ -305,7 +305,7 @@
                     <div class="product-title">{{ Str::limit($product->title, 40) }}</div>
                     <div class="product-price">{{ number_format($product->price, 2, '.', '\'') }} CHF</div>
                 </div>
-            </div>
+            </a>
             @endforeach
         </div>
         @else
