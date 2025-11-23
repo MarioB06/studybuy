@@ -617,15 +617,22 @@
                         <p>Verkäufer: {{ $product->user->name }}</p>
                         @auth
                             @if(auth()->id() !== $product->user_id)
-                                <p>Kontaktiere den Verkäufer, um mehr zu erfahren.</p>
-                                <a href="mailto:{{ $product->user->email }}" class="contact-button">
-                                    Verkäufer kontaktieren
-                                </a>
+                                @if($product->is_active)
+                                    <p>Kaufe dieses Produkt sicher über Stripe.</p>
+                                    <form method="POST" action="{{ route('products.checkout.create', $product) }}">
+                                        @csrf
+                                        <button type="submit" class="contact-button" style="border: none; width: 100%; cursor: pointer;">
+                                            💳 Sofort kaufen ({{ number_format($product->price, 2, '.', '\'') }} CHF)
+                                        </button>
+                                    </form>
+                                @else
+                                    <p style="color: #999;">Dieses Produkt ist bereits verkauft.</p>
+                                @endif
                             @else
                                 <p>Das ist dein eigenes Inserat.</p>
                             @endif
                         @else
-                            <p>Melde dich an, um den Verkäufer zu kontaktieren.</p>
+                            <p>Melde dich an, um dieses Produkt zu kaufen.</p>
                             <a href="{{ route('login') }}" class="contact-button">
                                 Jetzt anmelden
                             </a>

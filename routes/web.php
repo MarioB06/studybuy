@@ -53,6 +53,16 @@ Route::post('/products/{product}/forum', [App\Http\Controllers\ProductController
     ->middleware('auth')
     ->name('products.forum.store');
 
+// Stripe Checkout Routes (auth required)
+Route::middleware('auth')->group(function () {
+    Route::post('/products/{product}/checkout', [App\Http\Controllers\ProductController::class, 'createCheckoutSession'])
+        ->name('products.checkout.create');
+    Route::get('/products/{product}/checkout/success', [App\Http\Controllers\ProductController::class, 'checkoutSuccess'])
+        ->name('products.checkout.success');
+    Route::get('/products/{product}/checkout/cancel', [App\Http\Controllers\ProductController::class, 'checkoutCancel'])
+        ->name('products.checkout.cancel');
+});
+
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');

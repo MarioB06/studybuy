@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
+use Stripe\Stripe;
+use Stripe\Checkout\Session as StripeSession;
 
 class ProductController extends Controller
 {
@@ -187,5 +189,99 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * Create Stripe Checkout Session
+     */
+    public function createCheckoutSession(Product $product): RedirectResponse
+    {
+        // Check if product is still available
+        if (!$product->is_active) {
+            return redirect()->route('products.show', $product)
+                ->with('error', 'Dieses Produkt ist nicht mehr verfügbar.');
+        }
+
+        // Check if user is not buying their own product
+        if (auth()->id() === $product->user_id) {
+            return redirect()->route('products.show', $product)
+                ->with('error', 'Du kannst dein eigenes Produkt nicht kaufen.');
+        }
+
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        try {
+            $session = StripeSession::create([
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price_data' => [
+                        'currency' => 'chf',
+                        'product_data' => [
+                            'name' => $product->title,
+                            'description' => $product->description ? substr($product->description, 0, 500) : '',
+                            'images' => $product->mainImage
+                                ? [asset('storage/' . $product->mainImage->file_path)]
+                                : [],
+                        ],
+                        'unit_amount' => intval($product->price * 100), // Convert to cents
+                    ],
+                    'quantity' => 1,
+                ]],
+                'mode' => 'payment',
+                'success_url' => route('products.checkout.success', ['product' => $product->id]) . '?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => route('products.checkout.cancel', ['product' => $product->id]),
+                'metadata' => [
+                    'product_id' => $product->id,
+                    'buyer_id' => auth()->id(),
+                    'seller_id' => $product->user_id,
+                ],
+            ]);
+
+            return redirect($session->url);
+        } catch (\Exception $e) {
+            return redirect()->route('products.show', $product)
+                ->with('error', 'Fehler beim Erstellen der Checkout-Session: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Handle successful payment
+     */
+    public function checkoutSuccess(Request $request, Product $product): View
+    {
+        $sessionId = $request->get('session_id');
+
+        if (!$sessionId) {
+            abort(404);
+        }
+
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        try {
+            $session = StripeSession::retrieve($sessionId);
+
+            // Verify payment was successful
+            if ($session->payment_status === 'paid') {
+                // Mark product as sold
+                $product->update(['is_active' => false]);
+
+                return view('products.checkout-success', compact('product', 'session'));
+            }
+        } catch (\Exception $e) {
+            return view('products.checkout-success', [
+                'product' => $product,
+                'error' => 'Fehler beim Abrufen der Zahlungsinformationen.'
+            ]);
+        }
+
+        return view('products.checkout-success', compact('product'));
+    }
+
+    /**
+     * Handle cancelled payment
+     */
+    public function checkoutCancel(Product $product): View
+    {
+        return view('products.checkout-cancel', compact('product'));
     }
 }
