@@ -19,7 +19,7 @@
         .header {
             background: white;
             border-bottom: 1px solid #e0e0e0;
-            padding: 20px 40px;
+            padding: 10px 40px;
         }
 
         .header-container {
@@ -41,15 +41,11 @@
         }
 
         .logo-icon {
-            width: 32px;
-            height: 32px;
-            background: #000;
-            border-radius: 6px;
+            width: auto;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 20px;
         }
 
         .nav-links {
@@ -308,11 +304,13 @@
 
         @media (max-width: 480px) {
             .categories {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
             }
 
             .products-grid {
                 grid-template-columns: 1fr;
+                gap: 15px;
             }
         }
     </style>
@@ -321,8 +319,7 @@
     <header class="header">
         <div class="header-container">
             <a href="{{ route('dashboard') }}" class="logo">
-                <div class="logo-icon">🎒</div>
-                <span>StudyBuy</span>
+                <x-application-logo class="logo-icon" />
             </a>
             <nav class="nav-links">
                 <a href="{{ route('profile.edit') }}">Profil</a>
