@@ -307,8 +307,9 @@
         @endif
 
         @if($products->count() > 0)
+        <h2 style="font-size: 28px; margin-bottom: 25px; color: #333;">Top Produkte</h2>
         <div class="products-grid">
-            @foreach($products as $product)
+            @foreach($products->take(4) as $product)
             <a href="{{ route('products.show', $product) }}" class="product-card">
                 @if($product->mainImage)
                     <img src="{{ asset('storage/' . $product->mainImage->file_path) }}" alt="{{ $product->title }}" class="product-image">
@@ -336,6 +337,9 @@
                 </div>
             </a>
             @endforeach
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="{{ route('products.index') }}" style="display: inline-block; padding: 15px 40px; background: #667eea; color: white; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 16px; transition: background 0.2s;">Alle Produkte anzeigen</a>
         </div>
         @else
         <div style="text-align: center; padding: 60px 20px; color: #666;">
