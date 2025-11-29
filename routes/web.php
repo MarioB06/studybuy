@@ -68,6 +68,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class);
     Route::resource('schools', App\Http\Controllers\Admin\SchoolController::class);
+    Route::get('/email-logs', [App\Http\Controllers\Admin\EmailLogController::class, 'index'])->name('email-logs.index');
+    Route::delete('/email-logs/clear', [App\Http\Controllers\Admin\EmailLogController::class, 'clear'])->name('email-logs.clear');
 });
 
 require __DIR__.'/auth.php';

@@ -102,7 +102,7 @@
 
         .quick-actions {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
         }
 
@@ -192,6 +192,10 @@
                 <a href="{{ route('admin.schools.index') }}" class="action-button">
                     <div class="action-icon">=�</div>
                     <div class="action-label">Schulen verwalten</div>
+                </a>
+                <a href="{{ route('admin.email-logs.index') }}" class="action-button">
+                    <div class="action-icon">📧</div>
+                    <div class="action-label">E-Mail Logs</div>
                 </a>
                 <a href="#" class="action-button">
                     <div class="action-icon">=�</div>
