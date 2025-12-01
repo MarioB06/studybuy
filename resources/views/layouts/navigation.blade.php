@@ -24,15 +24,11 @@
     }
 
     .logo-icon {
-        width: 32px;
-        height: 32px;
-        background: #000;
-        border-radius: 6px;
+        width: auto;
+        height: 50px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
-        font-size: 20px;
     }
 
     .nav-links {
@@ -91,10 +87,10 @@
 <header class="header">
     <div class="header-container">
         <a href="{{ route('dashboard') }}" class="logo">
-            <div class="logo-icon">🎒</div>
-            <span>StudyBuy</span>
+            <x-application-logo class="logo-icon" />
         </a>
         <nav class="nav-links">
+            <a href="{{ route('products.index') }}">Alle Produkte</a>
             @if(auth()->user()->isAdmin())
                 <a href="{{ route('admin.dashboard') }}">
                     Admin

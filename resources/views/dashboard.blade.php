@@ -322,6 +322,10 @@
                 <x-application-logo class="logo-icon" />
             </a>
             <nav class="nav-links">
+                <a href="{{ route('products.index') }}">Alle Produkte</a>
+                @if(auth()->user()->isAdmin())
+                    <a href="{{ route('admin.dashboard') }}">Admin</a>
+                @endif
                 <a href="{{ route('profile.edit') }}">Profil</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
