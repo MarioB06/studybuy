@@ -15,22 +15,30 @@ class Product extends Model
         'school_id',
         'product_category_id',
         'user_id',
+        'buyer_id',
         'title',
         'description',
         'price',
         'expires_at',
+        'sold_at',
         'is_active',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
         'expires_at' => 'datetime',
+        'sold_at' => 'datetime',
         'is_active' => 'boolean',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function buyer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'buyer_id');
     }
 
     public function school(): BelongsTo

@@ -91,6 +91,8 @@
         </a>
         <nav class="nav-links">
             <a href="{{ route('products.index') }}">Alle Produkte</a>
+            <a href="{{ route('my-products.purchases') }}">Meine Käufe</a>
+            <a href="{{ route('my-products.sales') }}">Meine Verkäufe</a>
             @if(auth()->user()->isAdmin())
                 <a href="{{ route('admin.dashboard') }}">
                     Admin

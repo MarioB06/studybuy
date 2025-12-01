@@ -37,6 +37,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // My Products Routes
+    Route::get('/my-purchases', [App\Http\Controllers\MyProductsController::class, 'purchases'])->name('my-products.purchases');
+    Route::get('/my-sales', [App\Http\Controllers\MyProductsController::class, 'sales'])->name('my-products.sales');
+
     // Protected Product Routes (login required)
     Route::get('/products/create', [App\Http\Controllers\ProductController::class, 'create'])->name('products.create');
     Route::post('/products', [App\Http\Controllers\ProductController::class, 'store'])->name('products.store');
