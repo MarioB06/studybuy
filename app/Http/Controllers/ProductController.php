@@ -26,7 +26,8 @@ class ProductController extends Controller
 
         // Build query
         $query = Product::with(['mainImage', 'category', 'school'])
-            ->where('is_active', true);
+            ->where('is_active', true)
+            ->whereNull('buyer_id');
 
         // Search functionality
         if ($request->has('search') && !empty($request->search)) {
@@ -197,7 +198,7 @@ class ProductController extends Controller
     public function createCheckoutSession(Product $product): RedirectResponse
     {
         // Check if product is still available
-        if (!$product->is_active) {
+        if (!$product->is_active || $product->buyer_id !== null) {
             return redirect()->route('products.show', $product)
                 ->with('error', 'Dieses Produkt ist nicht mehr verfügbar.');
         }
@@ -262,8 +263,12 @@ class ProductController extends Controller
 
             // Verify payment was successful
             if ($session->payment_status === 'paid') {
-                // Mark product as sold
-                $product->update(['is_active' => false]);
+                // Mark product as sold and set buyer
+                $product->update([
+                    'is_active' => false,
+                    'buyer_id' => auth()->id(),
+                    'sold_at' => now(),
+                ]);
 
                 return view('products.checkout-success', compact('product', 'session'));
             }

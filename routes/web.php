@@ -11,6 +11,7 @@ Route::get('/', function () {
     $categories = App\Models\ProductCategory::inRandomOrder()->take(4)->get();
     $products = App\Models\Product::with(['mainImage', 'category', 'school'])
         ->where('is_active', true)
+        ->whereNull('buyer_id')
         ->latest()
         ->take(8)
         ->get();
@@ -22,6 +23,7 @@ Route::get('/dashboard', function () {
     $categories = App\Models\ProductCategory::inRandomOrder()->take(4)->get();
     $products = App\Models\Product::with(['mainImage', 'category', 'school'])
         ->where('is_active', true)
+        ->whereNull('buyer_id')
         ->latest()
         ->take(8)
         ->get();
