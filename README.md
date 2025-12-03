@@ -64,10 +64,10 @@ StudyBuy ist ein spezialisierter Re-Commerce-Marktplatz für Studierende an Univ
 - Vollautomatisch
 - **Beispiel:** CHF 100 Verkauf → Verkäufer erhält ~CHF 92.00
 
-#### Option 2: In-App Wallet + IBAN-Auszahlung - 7% + CHF 3.00
+#### Option 2: In-App Wallet + IBAN-Auszahlung - 7% + CHF 5.00
 - Verkäufe landen zu 100% im Wallet (kein Abzug beim Verkauf!)
 - Manuelle Auszahlungsanfrage per IBAN
-- Gebühren fallen nur bei Auszahlung an: 7% + CHF 3.00
+- Gebühren fallen nur bei Auszahlung an: 7% + CHF 5.00
 - Bearbeitungszeit: 2-5 Werktage
 - Admin-Bearbeitung erforderlich
 - **Beispiel:** CHF 100 Auszahlung → Verkäufer erhält CHF 90.00
@@ -152,13 +152,13 @@ graph TD
    - **Wallet wird gutgeschrieben**: CHF 100.00 (kein Abzug!)
 4. **Bei IBAN-Auszahlung**:
    - Verkäufer beantragt Auszahlung
-   - Gebühr: 7% + CHF 3.00 = CHF 10.00
+   - Gebühr: 7% + CHF 5.00 = CHF 12.00
    - **Verkäufer erhält**: CHF 90.00 (manuell überwiesen)
    - **Plattform behält**: CHF 10.00
 
 **Gebührenaufschlüsselung:**
 - Stripe-Gebühr beim Kauf: CHF 3.20 (trägt die Plattform)
-- StudyBuy behält bei Auszahlung: CHF 10.00 (7% + CHF 3.00)
+- StudyBuy behält bei Auszahlung: CHF 12.00 (7% + CHF 5.00)
 - **Netto-Gewinn für Plattform**: CHF 6.80 pro CHF 100 Verkauf
 
 **Zeitlinie:**
