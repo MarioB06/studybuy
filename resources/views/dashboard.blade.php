@@ -322,7 +322,6 @@
                 <x-application-logo class="logo-icon" />
             </a>
             <nav class="nav-links">
-                <a href="{{ route('dashboard') }}">Dashboard</a>
                 <a href="{{ route('products.index') }}">Alle Produkte</a>
                 <a href="{{ route('my-products.index') }}">Käufe & Verkäufe</a>
                 @if(auth()->user()->isAdmin())

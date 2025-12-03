@@ -2,7 +2,7 @@
     .header {
         background: white;
         border-bottom: 1px solid #e0e0e0;
-        padding: 20px 40px;
+        padding: 10px 40px;
     }
 
     .header-container {
@@ -90,10 +90,8 @@
             <x-application-logo class="logo-icon" />
         </a>
         <nav class="nav-links">
-            <a href="{{ route('dashboard') }}">Dashboard</a>
             <a href="{{ route('products.index') }}">Alle Produkte</a>
             <a href="{{ route('my-products.index') }}">Käufe & Verkäufe</a>
-            <a href="{{ route('chats.index') }}">Chats</a>
             @if(auth()->user()->isAdmin())
                 <a href="{{ route('admin.dashboard') }}">Admin</a>
             @endif
