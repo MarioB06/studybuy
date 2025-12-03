@@ -82,13 +82,15 @@
         </h4>
         <div style="font-size: 13px; color: #004085; line-height: 1.6;">
             @if($stripeConnected)
-                <strong>✓ Stripe Connect aktiv:</strong> Deine Verkäufe werden automatisch mit {{ $stripeFee }}% Gebühr auf dein verbundenes Bankkonto überwiesen.
+                <strong>✓ Stripe Connect aktiv:</strong> Deine Verkäufe werden automatisch mit {{ $stripeFee }}% Gebühr direkt auf dein verbundenes Bankkonto überwiesen.
                 <br><br>
-                Wallet-Guthaben kannst du ebenfalls per IBAN auszahlen lassen ({{ $manualFee }}% + CHF {{ number_format($manualFixedFee, 2) }} Gebühr).
+                Falls Geld im Wallet liegt, kannst du es per IBAN auszahlen ({{ $manualFee }}% + CHF {{ number_format($manualFixedFee, 2) }} Gebühr).
             @else
-                <strong>Ohne Stripe Connect:</strong> Deine Verkäufe landen in deinem Wallet. Von hier kannst du das Guthaben per IBAN auszahlen lassen ({{ $manualFee }}% + CHF {{ number_format($manualFixedFee, 2) }} Gebühr).
+                <strong>Ohne Stripe Connect:</strong> Deine Verkäufe landen zu 100% in deinem Wallet (kein Abzug!).
+                <br>
+                Bei Auszahlung per IBAN fallen {{ $manualFee }}% + CHF {{ number_format($manualFixedFee, 2) }} Gebühren an.
                 <br><br>
-                <strong>Empfehlung:</strong> Verbinde Stripe Connect für automatische Auszahlungen mit nur {{ $stripeFee }}% Gebühr! 💰
+                <strong>💰 Spare Gebühren:</strong> Mit Stripe Connect zahlst du nur {{ $stripeFee }}% und erhältst dein Geld sofort automatisch!
             @endif
         </div>
     </div>

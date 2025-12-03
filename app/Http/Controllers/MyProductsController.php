@@ -103,14 +103,13 @@ class MyProductsController extends Controller
         $seller = $product->user;
         $totalAmount = $product->price;
 
-        // Calculate platform fee (Stripe Connect fee is lower)
-        $platformFeePercentage = env('PLATFORM_FEE_PERCENTAGE', 7); // 7% for Stripe
-        $platformFee = $totalAmount * ($platformFeePercentage / 100);
-        $sellerAmount = $totalAmount - $platformFee;
-
         // Check if seller has Stripe Connect enabled
         if ($seller->stripe_connect_enabled && $seller->stripe_connect_id) {
-            // OPTION 1: Pay directly via Stripe Connect
+            // OPTION 1: Pay directly via Stripe Connect (with platform fee)
+            $platformFeePercentage = env('PLATFORM_FEE_PERCENTAGE', 7);
+            $platformFee = $totalAmount * $platformFeePercentage / 100;
+            $sellerAmount = $totalAmount - $platformFee;
+
             try {
                 Stripe::setApiKey(env('STRIPE_SECRET'));
 
@@ -133,17 +132,18 @@ class MyProductsController extends Controller
 
             } catch (\Exception $e) {
                 \Log::error("Stripe payout failed for product {$product->id}: " . $e->getMessage());
-                // Fallback to wallet if Stripe fails
-                $this->addToWallet($seller, $sellerAmount, $product);
+                // Fallback to wallet if Stripe fails (full amount)
+                $this->addToWallet($seller, $totalAmount, $product);
             }
         } else {
-            // OPTION 2: Add to user's wallet
-            $this->addToWallet($seller, $sellerAmount, $product);
+            // OPTION 2: Add FULL amount to user's wallet (no fees yet)
+            // Fees will be deducted when user requests IBAN payout
+            $this->addToWallet($seller, $totalAmount, $product);
         }
     }
 
     /**
-     * Add sale amount to seller's wallet
+     * Add sale amount to seller's wallet (full amount, no deduction)
      */
     private function addToWallet($seller, float $amount, Product $product)
     {
@@ -160,7 +160,7 @@ class MyProductsController extends Controller
                 $product->id
             );
 
-            \Log::info("Amount CHF {$amount} added to wallet for seller {$seller->id} (Product {$product->id})");
+            \Log::info("Full amount CHF {$amount} added to wallet for seller {$seller->id} (Product {$product->id})");
 
         } catch (\Exception $e) {
             \Log::error("Failed to add amount to wallet for seller {$seller->id}: " . $e->getMessage());
