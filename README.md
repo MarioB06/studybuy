@@ -64,13 +64,13 @@ StudyBuy ist ein spezialisierter Re-Commerce-Marktplatz für Studierende an Univ
 - Vollautomatisch
 - **Beispiel:** CHF 100 Verkauf → Verkäufer erhält ~CHF 92.00
 
-#### Option 2: In-App Wallet + IBAN-Auszahlung - 7% + CHF 5.00
+#### Option 2: In-App Wallet + IBAN-Auszahlung - 8% + CHF 5.00
 - Verkäufe landen zu 100% im Wallet (kein Abzug beim Verkauf!)
 - Manuelle Auszahlungsanfrage per IBAN
-- Gebühren fallen nur bei Auszahlung an: 7% + CHF 5.00
+- Gebühren fallen nur bei Auszahlung an: 8% + CHF 5.00
 - Bearbeitungszeit: 2-5 Werktage
 - Admin-Bearbeitung erforderlich
-- **Beispiel:** CHF 100 Auszahlung → Verkäufer erhält CHF 90.00
+- **Beispiel:** CHF 100 Auszahlung → Verkäufer erhält CHF 87.00
 
 ### 💬 Chat-System
 - **Automatische Chat-Erstellung** nach erfolgreichem Kauf
@@ -152,13 +152,13 @@ graph TD
    - **Wallet wird gutgeschrieben**: CHF 100.00 (kein Abzug!)
 4. **Bei IBAN-Auszahlung**:
    - Verkäufer beantragt Auszahlung
-   - Gebühr: 7% + CHF 5.00 = CHF 12.00
+   - Gebühr: 8% + CHF 5.00 = CHF 13.00
    - **Verkäufer erhält**: CHF 90.00 (manuell überwiesen)
    - **Plattform behält**: CHF 10.00
 
 **Gebührenaufschlüsselung:**
 - Stripe-Gebühr beim Kauf: CHF 3.20 (trägt die Plattform)
-- StudyBuy behält bei Auszahlung: CHF 12.00 (7% + CHF 5.00)
+- StudyBuy behält bei Auszahlung: CHF 13.00 (8% + CHF 5.00)
 - **Netto-Gewinn für Plattform**: CHF 6.80 pro CHF 100 Verkauf
 
 **Zeitlinie:**
@@ -395,10 +395,10 @@ STRIPE_WEBHOOK_SECRET=whsec_...           # Webhook Secret
 ### Gebühren
 ```env
 # Stripe Connect (automatische Auszahlung)
-PLATFORM_FEE_PERCENTAGE=7                 # 7% Gebühr
+PLATFORM_FEE_PERCENTAGE=5                 # 5% Gebühr
 
 # Manuelle IBAN-Auszahlung
-MANUAL_PAYOUT_FEE_PERCENTAGE=7            # 7% Prozent-Gebühr
+MANUAL_PAYOUT_FEE_PERCENTAGE=8            # 8% Prozent-Gebühr
 MANUAL_PAYOUT_FIXED_FEE=5.00              # CHF 5.00 Fixgebühr
 ```
 
@@ -464,22 +464,22 @@ MAIL_FROM_NAME="StudyBuy"
 
 | Methode | Gebühr | Auszahlung | Geschwindigkeit |
 |---------|--------|------------|-----------------|
-| **Stripe Connect** | 7% | Automatisch | Sofort nach Abschluss |
-| **IBAN (Wallet)** | 7% + CHF 5.00 | Manuell | 2-5 Werktage |
+| **Stripe Connect** | 5% | Automatisch | Sofort nach Abschluss |
+| **IBAN (Wallet)** | 8% + CHF 5.00 | Manuell | 2-5 Werktage |
 
 ### Kostenbeispiel (CHF 100 Verkauf)
 
 **Mit Stripe Connect:**
 - Verkaufspreis: CHF 100
-- Plattform-Gebühr: -CHF 7 (7%)
+- Plattform-Gebühr: -CHF 5 (5%)
 - Stripe-Gebühr: ~CHF 3 (zahlt Plattform)
-- **Verkäufer erhält**: CHF 93 (automatisch)
+- **Verkäufer erhält**: CHF 92 (automatisch)
 
 **Ohne Stripe Connect:**
 - Verkaufspreis: CHF 100
 - Ins Wallet: +CHF 100 (voller Betrag!)
-- Bei Auszahlung: -CHF 12 (7% + CHF 5)
-- **Verkäufer erhält**: CHF 88 (manuell)
+- Bei Auszahlung: -CHF 12 (8% + CHF 5)
+- **Verkäufer erhält**: CHF 87 (manuell)
 
 ---
 
