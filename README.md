@@ -54,18 +54,23 @@ StudyBuy ist ein spezialisierter Re-Commerce-Marktplatz für Studierende an Univ
 
 ### 💰 Auszahlungssystem
 
-#### Option 1: Stripe Connect (Automatisch) - 7% Gebühr
+#### Option 1: Stripe Connect (Automatisch) - ~7.9% + CHF 0.30 Gebühr
+- **Gebührenstruktur:**
+  - 5% Plattformgebühr (StudyBuy)
+  - 2.9% + CHF 0.30 Zahlungsabwicklung (Stripe)
+  - **Total: ~7.9% + CHF 0.30**
 - Automatische Auszahlung direkt auf Bankkonto
 - Sofortige Überweisung nach Transaktionsabschluss
-- Niedrigste Gebühren (7%)
 - Vollautomatisch
+- **Beispiel:** CHF 100 Verkauf → Verkäufer erhält ~CHF 92.00
 
-#### Option 2: In-App Wallet + IBAN-Auszahlung - 7% + CHF 5.00
+#### Option 2: In-App Wallet + IBAN-Auszahlung - 7% + CHF 3.00
 - Verkäufe landen zu 100% im Wallet (kein Abzug beim Verkauf!)
 - Manuelle Auszahlungsanfrage per IBAN
-- Gebühren fallen nur bei Auszahlung an
+- Gebühren fallen nur bei Auszahlung an: 7% + CHF 3.00
 - Bearbeitungszeit: 2-5 Werktage
 - Admin-Bearbeitung erforderlich
+- **Beispiel:** CHF 100 Auszahlung → Verkäufer erhält CHF 90.00
 
 ### 💬 Chat-System
 - **Automatische Chat-Erstellung** nach erfolgreichem Kauf
@@ -98,7 +103,7 @@ StudyBuy ist ein spezialisierter Re-Commerce-Marktplatz für Studierende an Univ
 graph TD
     A[Verkäufer erstellt Produkt] --> B[Käufer bezahlt via Stripe]
     B --> C{Stripe Connect verbunden?}
-    C -->|Ja| D[7% Gebühr abgezogen]
+    C -->|Ja| D[~7.9% + CHF 0.30 Gebühr abgezogen]
     C -->|Nein| E[100% ins Wallet]
     D --> F[Automatische Überweisung auf Bankkonto]
     E --> G[Guthaben im Wallet sichtbar]
@@ -121,9 +126,15 @@ graph TD
 1. **Käufer bezahlt**: CHF 100 via Stripe
 2. **Plattform erhält**: CHF 100 (sofort)
 3. **Bei Abschluss**:
-   - Plattform-Gebühr: 7% = CHF 7.00
-   - Stripe-Gebühr: ~2.9% + CHF 0.30 = CHF 3.20
-   - **Verkäufer erhält**: CHF 93.00 (automatisch auf Bankkonto)
+   - Plattform-Gebühr: 5% = CHF 5.00
+   - Stripe-Gebühr: 2.9% + CHF 0.30 = CHF 3.20
+   - **Total Gebühren**: CHF 8.20 (~8.2%)
+   - **Verkäufer erhält**: CHF 91.80 (automatisch auf Bankkonto)
+
+**Gebührenaufschlüsselung:**
+- StudyBuy behält: CHF 5.00 (Plattformgebühr)
+- Stripe behält: CHF 3.20 (Zahlungsabwicklung)
+- An Verkäufer: CHF 91.80 (via Stripe Transfer)
 
 **Zeitlinie:**
 - Zahlung → Sofort
@@ -136,18 +147,24 @@ graph TD
 
 1. **Käufer bezahlt**: CHF 100 via Stripe
 2. **Plattform erhält**: CHF 100 (sofort)
+   - Stripe-Gebühr (2.9% + CHF 0.30 = CHF 3.20) wird von der Plattform getragen
 3. **Bei Abschluss**:
-   - **Wallet wird gutgeschrieben**: CHF 100 (kein Abzug!)
+   - **Wallet wird gutgeschrieben**: CHF 100.00 (kein Abzug!)
 4. **Bei IBAN-Auszahlung**:
    - Verkäufer beantragt Auszahlung
-   - Gebühr: 7% + CHF 5.00 = CHF 12.00
-   - **Verkäufer erhält**: CHF 88.00 (manuell überwiesen)
-   - **Plattform behält**: CHF 12.00
+   - Gebühr: 7% + CHF 3.00 = CHF 10.00
+   - **Verkäufer erhält**: CHF 90.00 (manuell überwiesen)
+   - **Plattform behält**: CHF 10.00
+
+**Gebührenaufschlüsselung:**
+- Stripe-Gebühr beim Kauf: CHF 3.20 (trägt die Plattform)
+- StudyBuy behält bei Auszahlung: CHF 10.00 (7% + CHF 3.00)
+- **Netto-Gewinn für Plattform**: CHF 6.80 pro CHF 100 Verkauf
 
 **Zeitlinie:**
 - Zahlung → Sofort
 - Wallet-Gutschrift → Nach Bestätigung (übergeben + erhalten)
-- Auszahlungsanfrage → Jederzeit möglich
+- Auszahlungsanfrage → Jederzeit möglich (Minimum: CHF 10)
 - Banküberweisung → 2-5 Werktage nach Admin-Bearbeitung
 
 ### 4️⃣ Transaktionsstatus-Workflow

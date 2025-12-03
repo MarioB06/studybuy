@@ -1,9 +1,12 @@
 @php
     $wallet = auth()->user()->wallet()->first() ?? auth()->user()->wallet()->create(['balance' => 0, 'currency' => 'CHF']);
     $stripeConnected = auth()->user()->stripe_connect_enabled;
-    $stripeFee = env('PLATFORM_FEE_PERCENTAGE', 7);
-    $manualFee = env('MANUAL_PAYOUT_FEE_PERCENTAGE', 12);
-    $manualFixedFee = env('MANUAL_PAYOUT_FIXED_FEE', 2.50);
+    $platformFee = env('PLATFORM_FEE_PERCENTAGE', 5);
+    $stripeProcessingFee = 2.9; // Stripe's processing fee percentage
+    $stripeFixedFee = 0.30; // Stripe's fixed fee per transaction
+    $totalStripeFee = $platformFee + $stripeProcessingFee; // Total percentage for Stripe Connect
+    $manualFee = env('MANUAL_PAYOUT_FEE_PERCENTAGE', 7);
+    $manualFixedFee = env('MANUAL_PAYOUT_FIXED_FEE', 3.00);
 @endphp
 
 <section>
@@ -47,13 +50,16 @@
                 <div style="font-size: 13px; color: #666; margin-bottom: 12px;">
                     Automatische Auszahlung direkt auf dein Bankkonto
                 </div>
-                <div style="font-size: 20px; font-weight: 600; color: #28a745; margin-bottom: 8px;">
-                    {{ $stripeFee }}% Gebühr
+                <div style="font-size: 20px; font-weight: 600; color: #28a745; margin-bottom: 4px;">
+                    ~{{ number_format($totalStripeFee, 1) }}% + CHF {{ number_format($stripeFixedFee, 2) }}
+                </div>
+                <div style="font-size: 11px; color: #999; margin-bottom: 8px;">
+                    ({{ $platformFee }}% Plattform + {{ $stripeProcessingFee }}% Stripe + CHF {{ number_format($stripeFixedFee, 2) }})
                 </div>
                 <ul style="font-size: 12px; color: #666; padding-left: 18px; margin: 0;">
                     <li>Sofortige Auszahlung</li>
-                    <li>Niedrigste Gebühren</li>
                     <li>Vollautomatisch</li>
+                    <li>Direkt auf Bankkonto</li>
                 </ul>
             </div>
 
@@ -82,15 +88,26 @@
         </h4>
         <div style="font-size: 13px; color: #004085; line-height: 1.6;">
             @if($stripeConnected)
-                <strong>✓ Stripe Connect aktiv:</strong> Deine Verkäufe werden automatisch mit {{ $stripeFee }}% Gebühr direkt auf dein verbundenes Bankkonto überwiesen.
+                <strong>✓ Stripe Connect aktiv:</strong> Deine Verkäufe werden automatisch direkt auf dein verbundenes Bankkonto überwiesen.
+                <br><br>
+                <strong>Gebühren bei Stripe Connect:</strong>
+                <br>• {{ $platformFee }}% Plattformgebühr (StudyBuy)
+                <br>• {{ $stripeProcessingFee }}% + CHF {{ number_format($stripeFixedFee, 2) }} Zahlungsabwicklung (Stripe)
+                <br>• <strong>Total: ~{{ number_format($totalStripeFee, 1) }}% + CHF {{ number_format($stripeFixedFee, 2) }}</strong>
+                <br><br>
+                <em>Beispiel: Bei CHF 100 Verkauf erhältst du ~CHF {{ number_format(100 - (100 * $totalStripeFee / 100) - $stripeFixedFee, 2) }}</em>
                 <br><br>
                 Falls Geld im Wallet liegt, kannst du es per IBAN auszahlen ({{ $manualFee }}% + CHF {{ number_format($manualFixedFee, 2) }} Gebühr).
             @else
-                <strong>Ohne Stripe Connect:</strong> Deine Verkäufe landen zu 100% in deinem Wallet (kein Abzug!).
-                <br>
-                Bei Auszahlung per IBAN fallen {{ $manualFee }}% + CHF {{ number_format($manualFixedFee, 2) }} Gebühren an.
+                <strong>Ohne Stripe Connect:</strong> Deine Verkäufe landen zu 100% in deinem Wallet (kein Abzug beim Verkauf!).
                 <br><br>
-                <strong>💰 Spare Gebühren:</strong> Mit Stripe Connect zahlst du nur {{ $stripeFee }}% und erhältst dein Geld sofort automatisch!
+                <strong>Gebühren bei IBAN-Auszahlung:</strong>
+                <br>• {{ $manualFee }}% + CHF {{ number_format($manualFixedFee, 2) }} Bearbeitungsgebühr
+                <br>• Bearbeitungszeit: 2-5 Werktage
+                <br><br>
+                <em>Beispiel: Bei CHF 100 Auszahlung erhältst du CHF {{ number_format(100 - (100 * $manualFee / 100) - $manualFixedFee, 2) }}</em>
+                <br><br>
+                <strong>💰 Vergleich:</strong> Mit Stripe Connect erhältst du bei CHF 100 Verkauf ~CHF {{ number_format(100 - (100 * $totalStripeFee / 100) - $stripeFixedFee, 2) }} sofort automatisch!
             @endif
         </div>
     </div>
@@ -124,12 +141,14 @@
 
                 @php
                     $exampleAmount = min(50, $wallet->balance);
-                    $exampleFee = ($exampleAmount * $manualFee / 100) + $manualFixedFee;
+                    $exampleFee = $exampleAmount * $manualFee / 100 + $manualFixedFee;
                     $exampleNet = $exampleAmount - $exampleFee;
                 @endphp
 
                 <div style="background: #fff3cd; padding: 12px; border-radius: 6px; margin-bottom: 16px; font-size: 13px; color: #856404;">
-                    <strong>Beispiel:</strong> Bei CHF {{ number_format($exampleAmount, 2) }} erhältst du CHF {{ number_format($exampleNet, 2) }} (Gebühr: CHF {{ number_format($exampleFee, 2) }})
+                    <strong>Gebührenberechnung:</strong> {{ $manualFee }}% + CHF {{ number_format($manualFixedFee, 2) }} = CHF {{ number_format($exampleFee, 2) }} Gebühr
+                    <br>
+                    <strong>Beispiel:</strong> Bei CHF {{ number_format($exampleAmount, 2) }} Auszahlung erhältst du CHF {{ number_format($exampleNet, 2) }}
                 </div>
 
                 <div style="margin-bottom: 16px;">

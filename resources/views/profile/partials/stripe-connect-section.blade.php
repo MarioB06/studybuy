@@ -77,9 +77,30 @@
             </ul>
         </div>
 
+        @php
+            $platformFee = env('PLATFORM_FEE_PERCENTAGE', 5);
+            $stripeProcessingFee = 2.9;
+            $stripeFixedFee = 0.30;
+            $totalStripeFee = $platformFee + $stripeProcessingFee;
+        @endphp
+
+        <div style="background: #e7f3ff; padding: 16px; border-radius: 8px; border: 1px solid #b3d9ff; margin-bottom: 20px;">
+            <h4 style="font-size: 14px; font-weight: 600; color: #004085; margin-bottom: 12px;">
+                💰 Gebührenstruktur mit Stripe Connect
+            </h4>
+            <div style="font-size: 13px; color: #004085; line-height: 1.6;">
+                <strong>Bei jedem Verkauf werden folgende Gebühren abgezogen:</strong>
+                <br>• {{ $platformFee }}% Plattformgebühr (StudyBuy)
+                <br>• {{ $stripeProcessingFee }}% + CHF {{ number_format($stripeFixedFee, 2) }} Zahlungsabwicklung (Stripe)
+                <br>• <strong>Total: ~{{ number_format($totalStripeFee, 1) }}% + CHF {{ number_format($stripeFixedFee, 2) }}</strong>
+                <br><br>
+                <strong>Beispiel:</strong> Bei einem Verkauf von CHF 100 erhältst du automatisch <strong>~CHF {{ number_format(100 - (100 * $totalStripeFee / 100) - $stripeFixedFee, 2) }}</strong> direkt auf dein Bankkonto.
+            </div>
+        </div>
+
         <div style="background: #fff3cd; padding: 16px; border-radius: 8px; border: 1px solid #ffeaa7; margin-bottom: 20px;">
             <p style="font-size: 14px; color: #856404; margin-bottom: 0;">
-                <strong>Hinweis:</strong> Ohne Stripe Connect kannst du keine automatischen Auszahlungen erhalten. Verkäufe werden erst ausgezahlt, nachdem du dein Konto verbunden hast.
+                <strong>Hinweis:</strong> Ohne Stripe Connect landen deine Verkäufe zu 100% in deinem Wallet. Bei Auszahlung per IBAN fallen dann {{ env('MANUAL_PAYOUT_FEE_PERCENTAGE', 7) }}% + CHF {{ number_format(env('MANUAL_PAYOUT_FIXED_FEE', 3.00), 2) }} Gebühren an.
             </p>
         </div>
 
