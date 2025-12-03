@@ -96,48 +96,74 @@ class MyProductsController extends Controller
     }
 
     /**
-     * Process automatic payout to seller via Stripe Connect
+     * Process automatic payout to seller via Stripe Connect OR add to wallet
      */
     private function processAutomaticPayout(Product $product)
     {
         $seller = $product->user;
+        $totalAmount = $product->price;
+
+        // Calculate platform fee (Stripe Connect fee is lower)
+        $platformFeePercentage = env('PLATFORM_FEE_PERCENTAGE', 7); // 7% for Stripe
+        $platformFee = $totalAmount * ($platformFeePercentage / 100);
+        $sellerAmount = $totalAmount - $platformFee;
 
         // Check if seller has Stripe Connect enabled
-        if (!$seller->stripe_connect_enabled || !$seller->stripe_connect_id) {
-            \Log::warning("Seller {$seller->id} has no Stripe Connect account. Payout for product {$product->id} skipped.");
-            return;
+        if ($seller->stripe_connect_enabled && $seller->stripe_connect_id) {
+            // OPTION 1: Pay directly via Stripe Connect
+            try {
+                Stripe::setApiKey(env('STRIPE_SECRET'));
+
+                $transfer = Transfer::create([
+                    'amount' => intval($sellerAmount * 100), // Convert to cents
+                    'currency' => 'chf',
+                    'destination' => $seller->stripe_connect_id,
+                    'description' => "Verkauf: {$product->title} (Produkt ID: {$product->id})",
+                    'metadata' => [
+                        'product_id' => $product->id,
+                        'seller_id' => $seller->id,
+                        'buyer_id' => $product->buyer_id,
+                        'total_amount' => $totalAmount,
+                        'platform_fee' => $platformFee,
+                        'seller_amount' => $sellerAmount,
+                    ],
+                ]);
+
+                \Log::info("Automatic Stripe payout successful for product {$product->id}. Transfer ID: {$transfer->id}, Amount: CHF {$sellerAmount}");
+
+            } catch (\Exception $e) {
+                \Log::error("Stripe payout failed for product {$product->id}: " . $e->getMessage());
+                // Fallback to wallet if Stripe fails
+                $this->addToWallet($seller, $sellerAmount, $product);
+            }
+        } else {
+            // OPTION 2: Add to user's wallet
+            $this->addToWallet($seller, $sellerAmount, $product);
         }
+    }
 
+    /**
+     * Add sale amount to seller's wallet
+     */
+    private function addToWallet($seller, float $amount, Product $product)
+    {
         try {
-            Stripe::setApiKey(env('STRIPE_SECRET'));
+            $wallet = $seller->wallet()->firstOrCreate(
+                ['user_id' => $seller->id],
+                ['balance' => 0, 'currency' => 'CHF']
+            );
 
-            // Calculate amounts
-            $totalAmount = $product->price; // CHF
-            $platformFeePercentage = env('PLATFORM_FEE_PERCENTAGE', 10); // Default 10%
-            $platformFee = $totalAmount * ($platformFeePercentage / 100);
-            $sellerAmount = $totalAmount - $platformFee;
+            $wallet->credit(
+                $amount,
+                "Verkauf: {$product->title}",
+                'Product',
+                $product->id
+            );
 
-            // Create transfer to seller's Stripe Connect account
-            $transfer = Transfer::create([
-                'amount' => intval($sellerAmount * 100), // Convert to cents
-                'currency' => 'chf',
-                'destination' => $seller->stripe_connect_id,
-                'description' => "Verkauf: {$product->title} (Produkt ID: {$product->id})",
-                'metadata' => [
-                    'product_id' => $product->id,
-                    'seller_id' => $seller->id,
-                    'buyer_id' => $product->buyer_id,
-                    'total_amount' => $totalAmount,
-                    'platform_fee' => $platformFee,
-                    'seller_amount' => $sellerAmount,
-                ],
-            ]);
-
-            \Log::info("Automatic payout successful for product {$product->id}. Transfer ID: {$transfer->id}, Amount: CHF {$sellerAmount}");
+            \Log::info("Amount CHF {$amount} added to wallet for seller {$seller->id} (Product {$product->id})");
 
         } catch (\Exception $e) {
-            \Log::error("Automatic payout failed for product {$product->id}: " . $e->getMessage());
-            // Don't throw exception - just log it. The product is still marked as completed.
+            \Log::error("Failed to add amount to wallet for seller {$seller->id}: " . $e->getMessage());
         }
     }
 }

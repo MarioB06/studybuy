@@ -47,6 +47,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/stripe-connect/disconnect', [App\Http\Controllers\StripeConnectController::class, 'disconnect'])->name('stripe-connect.disconnect');
     Route::get('/stripe-connect/dashboard', [App\Http\Controllers\StripeConnectController::class, 'dashboard'])->name('stripe-connect.dashboard');
 
+    // Wallet Routes
+    Route::post('/wallet/payout-request', [App\Http\Controllers\WalletController::class, 'createPayoutRequest'])->name('wallet.payout-request');
+
     // My Products Routes
     Route::get('/my-products', [App\Http\Controllers\MyProductsController::class, 'index'])->name('my-products.index');
     Route::get('/my-purchases', [App\Http\Controllers\MyProductsController::class, 'purchases'])->name('my-products.purchases');

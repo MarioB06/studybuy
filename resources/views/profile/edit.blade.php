@@ -36,6 +36,10 @@
         </div>
 
         <div class="profile-section">
+            @include('profile.partials.wallet-section')
+        </div>
+
+        <div class="profile-section">
             @include('profile.partials.stripe-connect-section')
         </div>
 

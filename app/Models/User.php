@@ -60,4 +60,26 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->bit === true;
     }
+
+    /**
+     * Get user's wallet
+     */
+    public function wallet(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
+    /**
+     * Get or create user's wallet
+     */
+    public function getWalletAttribute(): Wallet
+    {
+        if (!$this->wallet()->exists()) {
+            return $this->wallet()->create([
+                'balance' => 0,
+                'currency' => 'CHF',
+            ]);
+        }
+        return $this->wallet;
+    }
 }
