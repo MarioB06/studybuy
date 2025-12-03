@@ -36,6 +36,10 @@
         </div>
 
         <div class="profile-section">
+            @include('profile.partials.stripe-connect-section')
+        </div>
+
+        <div class="profile-section">
             @include('profile.partials.update-password-form')
         </div>
 

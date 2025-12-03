@@ -22,6 +22,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'bit',
+        'stripe_connect_id',
+        'stripe_connect_enabled',
+        'stripe_connect_created_at',
     ];
 
     /**
@@ -45,6 +48,8 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'bit' => 'boolean',
+            'stripe_connect_enabled' => 'boolean',
+            'stripe_connect_created_at' => 'datetime',
         ];
     }
 

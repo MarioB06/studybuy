@@ -39,6 +39,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // Stripe Connect Routes
+    Route::get('/stripe-connect', [App\Http\Controllers\StripeConnectController::class, 'index'])->name('stripe-connect.index');
+    Route::post('/stripe-connect/connect', [App\Http\Controllers\StripeConnectController::class, 'connect'])->name('stripe-connect.connect');
+    Route::get('/stripe-connect/return', [App\Http\Controllers\StripeConnectController::class, 'returnUrl'])->name('stripe-connect.return');
+    Route::get('/stripe-connect/refresh', [App\Http\Controllers\StripeConnectController::class, 'refresh'])->name('stripe-connect.refresh');
+    Route::post('/stripe-connect/disconnect', [App\Http\Controllers\StripeConnectController::class, 'disconnect'])->name('stripe-connect.disconnect');
+    Route::get('/stripe-connect/dashboard', [App\Http\Controllers\StripeConnectController::class, 'dashboard'])->name('stripe-connect.dashboard');
+
     // My Products Routes
     Route::get('/my-products', [App\Http\Controllers\MyProductsController::class, 'index'])->name('my-products.index');
     Route::get('/my-purchases', [App\Http\Controllers\MyProductsController::class, 'purchases'])->name('my-products.purchases');
