@@ -22,6 +22,9 @@ class Product extends Model
         'expires_at',
         'sold_at',
         'is_active',
+        'erhalten',
+        'uebergeben',
+        'abgeschlossen',
     ];
 
     protected $casts = [
@@ -29,6 +32,9 @@ class Product extends Model
         'expires_at' => 'datetime',
         'sold_at' => 'datetime',
         'is_active' => 'boolean',
+        'erhalten' => 'boolean',
+        'uebergeben' => 'boolean',
+        'abgeschlossen' => 'boolean',
     ];
 
     public function user(): BelongsTo

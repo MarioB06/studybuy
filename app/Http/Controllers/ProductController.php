@@ -7,6 +7,7 @@ use App\Models\ProductImage;
 use App\Models\School;
 use App\Models\ProductCategory;
 use App\Models\ProductForumMessage;
+use App\Models\Chat;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -268,6 +269,22 @@ class ProductController extends Controller
                     'is_active' => false,
                     'buyer_id' => auth()->id(),
                     'sold_at' => now(),
+                ]);
+
+                // Create chat between buyer and seller
+                $buyerId = auth()->id();
+                $sellerId = $product->user_id;
+
+                // Ensure user1_id is always the smaller ID for consistency
+                $user1Id = min($buyerId, $sellerId);
+                $user2Id = max($buyerId, $sellerId);
+
+                Chat::firstOrCreate([
+                    'product_id' => $product->id,
+                    'user1_id' => $user1Id,
+                    'user2_id' => $user2Id,
+                ], [
+                    'last_message_at' => now(),
                 ]);
 
                 return view('products.checkout-success', compact('product', 'session'));

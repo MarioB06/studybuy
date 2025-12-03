@@ -40,8 +40,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // My Products Routes
+    Route::get('/my-products', [App\Http\Controllers\MyProductsController::class, 'index'])->name('my-products.index');
     Route::get('/my-purchases', [App\Http\Controllers\MyProductsController::class, 'purchases'])->name('my-products.purchases');
     Route::get('/my-sales', [App\Http\Controllers\MyProductsController::class, 'sales'])->name('my-products.sales');
+    Route::post('/my-products/{product}/status', [App\Http\Controllers\MyProductsController::class, 'updateStatus'])->name('my-products.update-status');
+
+    // Chat Routes
+    Route::get('/chats', [App\Http\Controllers\ChatController::class, 'index'])->name('chats.index');
+    Route::get('/chats/{chat}', [App\Http\Controllers\ChatController::class, 'show'])->name('chats.show');
+    Route::post('/chats/{chat}/messages', [App\Http\Controllers\ChatController::class, 'store'])->name('chats.messages.store');
 
     // Protected Product Routes (login required)
     Route::get('/products/create', [App\Http\Controllers\ProductController::class, 'create'])->name('products.create');
