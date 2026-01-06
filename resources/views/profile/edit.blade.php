@@ -1,7 +1,7 @@
 <x-app-layout>
     <style>
         .profile-container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 40px auto;
             padding: 0 40px;
         }

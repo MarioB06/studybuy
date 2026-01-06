@@ -23,7 +23,7 @@
         }
 
         .header-container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             display: flex;
             align-items: center;
@@ -83,7 +83,7 @@
         }
 
         .search-container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 30px auto;
             padding: 0 40px;
         }
@@ -118,7 +118,7 @@
         }
 
         .main-content {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 40px 40px;
         }
