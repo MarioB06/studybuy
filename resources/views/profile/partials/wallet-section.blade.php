@@ -19,6 +19,29 @@
         </p>
     </header>
 
+    {{-- Success/Error Messages --}}
+    @if(session('success'))
+        <div style="background: #d4edda; color: #155724; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div style="background: #f8d7da; color: #721c24; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div style="background: #f8d7da; color: #721c24; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+            <ul style="margin: 0; padding-left: 20px;">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     {{-- Wallet Balance --}}
     <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 12px; margin-bottom: 24px; color: white;">
         <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Verfügbares Guthaben</div>
@@ -159,7 +182,8 @@
                            name="iban"
                            placeholder="CH93 0076 2011 6238 5295 7"
                            required
-                           pattern="[A-Z]{2}[0-9]{2}[A-Z0-9]+"
+                           pattern="[A-Z]{2}[0-9]{2}[\sA-Z0-9]+"
+                           title="Bitte gib eine gültige IBAN ein (z.B. CH93 0076 2011 6238 5295 7)"
                            style="width: 100%; padding: 10px; border: 1px solid #dee2e6; border-radius: 6px; font-size: 14px; text-transform: uppercase;">
                 </div>
 
