@@ -217,7 +217,7 @@
                 <div class="chat-header-subtitle">{{ $chat->product->title }}</div>
             </div>
 
-            <a href="{{ route('chats.index') }}" class="back-button">← Zurück</a>
+            <a href="{{ route('my-products.index') }}" class="back-button">← Zurück</a>
         </div>
 
         <div class="messages-container" id="messagesContainer">
